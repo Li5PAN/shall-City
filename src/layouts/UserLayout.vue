@@ -316,8 +316,7 @@ watch(() => route.path, (newPath) => {
     padding: 0;
     
     .header-content {
-      max-width: 1200px;
-      margin: 0 auto;
+      width: 100%;
       padding: 0 20px;
       display: flex;
       align-items: center;
@@ -326,6 +325,7 @@ watch(() => route.path, (newPath) => {
     
     .logo {
       margin-right: 40px;
+      flex-shrink: 0;
       
       a {
         display: flex;
@@ -350,11 +350,28 @@ watch(() => route.path, (newPath) => {
     .header-nav {
       flex: 1;
       border-bottom: none;
+      line-height: 64px;
       
       :deep(.ant-menu-item) {
         a {
           text-decoration: none;
           color: inherit;
+        }
+      }
+      
+      :deep(.ant-menu-horizontal) {
+        border-bottom: none;
+      }
+      
+      :deep(.ant-menu-horizontal > .ant-menu-item) {
+        border-bottom: 2px solid transparent;
+        
+        &:hover {
+          border-bottom-color: #1890ff;
+        }
+        
+        &.ant-menu-item-selected {
+          border-bottom-color: #1890ff;
         }
       }
     }
@@ -363,6 +380,7 @@ watch(() => route.path, (newPath) => {
       display: flex;
       align-items: center;
       gap: 16px;
+      flex-shrink: 0;
     }
     
     .user-info {
@@ -372,17 +390,15 @@ watch(() => route.path, (newPath) => {
   }
   
   .layout-body {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+    width: 100%;
+    padding: 0;
     background: #f5f5f5;
+    min-height: calc(100vh - 64px);
   }
   
   .layout-sidebar {
     background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    margin-right: 20px;
+    border-right: 1px solid #f0f0f0;
     
     :deep(.ant-layout-sider-children) {
       padding: 16px 0;
@@ -398,17 +414,20 @@ watch(() => route.path, (newPath) => {
         color: inherit;
       }
     }
+    
+    :deep(.ant-menu-inline) {
+      border-right: none;
+    }
   }
   
   .layout-main {
     background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     padding: 0;
     
     .breadcrumb {
       padding: 16px 24px;
       border-bottom: 1px solid #f0f0f0;
+      background: #fafafa;
       
       :deep(.ant-breadcrumb-link) {
         a {
@@ -425,6 +444,57 @@ watch(() => route.path, (newPath) => {
     .main-content {
       padding: 24px;
       min-height: 600px;
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .user-layout {
+    .layout-header {
+      .header-content {
+        padding: 0 16px;
+      }
+      
+      .logo {
+        margin-right: 24px;
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .user-layout {
+    .layout-header {
+      .header-content {
+        padding: 0 12px;
+      }
+      
+      .logo {
+        margin-right: 16px;
+        
+        span {
+          display: none;
+        }
+      }
+      
+      .header-actions {
+        gap: 8px;
+        
+        .ant-input-search {
+          width: 150px !important;
+        }
+      }
+    }
+    
+    .layout-body {
+      flex-direction: column;
+      
+      .layout-sidebar {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: none !important;
+        order: -1;
+      }
     }
   }
 }
