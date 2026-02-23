@@ -33,6 +33,12 @@ export default {
       component: () => import('@/pages/provider/services/EditService.vue'),
       meta: { title: '编辑服务' }
     },
+    {
+      path: 'services/audit-result/:id',
+      name: 'ServiceAuditResult',
+      component: () => import('@/pages/provider/services/ServiceAuditResult.vue'),
+      meta: { title: '服务审核结果' }
+    },
     
     // 订单管理
     {
@@ -42,13 +48,19 @@ export default {
       meta: { title: '订单管理' }
     },
     {
+      path: 'orders/delivery/:id',
+      name: 'OrderDelivery',
+      component: () => import('@/pages/provider/orders/OrderDelivery.vue'),
+      meta: { title: '订单交付' }
+    },
+    {
       path: 'orders/:id',
       name: 'ProviderOrderDetail',
       component: () => import('@/pages/provider/orders/OrderDetail.vue'),
       meta: { title: '订单详情' }
     },
     
-    // 数据统计
+    // 交易记录
     {
       path: 'transactions',
       name: 'ProviderTransactions',

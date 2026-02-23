@@ -171,12 +171,18 @@ const breadcrumbs = computed(() => {
       crumbs.push({ title: '文章审核', path: currentPath })
     } else if (path === 'services') {
       crumbs.push({ title: '服务审核', path: currentPath })
+    } else if (path === 'bounty') {
+      crumbs.push({ title: '需求审核', path: currentPath })
     } else if (path === 'forum') {
       crumbs.push({ title: '论坛管理', path: currentPath })
+    } else if (path === 'sections') {
+      crumbs.push({ title: '板块管理', path: null })
     } else if (path === 'orders') {
       crumbs.push({ title: '订单管理', path: currentPath })
     } else if (path === 'appeals') {
       crumbs.push({ title: '申诉处理', path: currentPath })
+    } else if (path === 'arbitration') {
+      crumbs.push({ title: '订单仲裁', path: null })
     } else if (path === 'statistics') {
       crumbs.push({ title: '数据统计', path: currentPath })
     } else if (path === 'logs') {
@@ -242,10 +248,20 @@ watch(() => route.path, (newPath) => {
         selectedKeys.value = ['article-review']
       } else if (module === 'services') {
         selectedKeys.value = ['service-review']
+      } else if (module === 'bounty') {
+        selectedKeys.value = ['bounty-review']
       } else if (module === 'forum') {
-        selectedKeys.value = ['forum-manage']
+        if (pathSegments[3] === 'sections') {
+          selectedKeys.value = ['forum-sections']
+        } else {
+          selectedKeys.value = ['forum-manage']
+        }
       } else if (module === 'orders') {
-        selectedKeys.value = ['order-list']
+        if (pathSegments[3] === 'arbitration') {
+          selectedKeys.value = ['order-arbitration']
+        } else {
+          selectedKeys.value = ['order-list']
+        }
       } else if (module === 'appeals') {
         selectedKeys.value = ['appeal-handle']
       } else if (module === 'statistics') {

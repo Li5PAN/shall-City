@@ -148,7 +148,7 @@ const searchKeyword = ref('')
 const showNotifications = ref(false)
 const unreadCount = ref(5)
 const selectedKeys = ref([])
-const openKeys = ref(['articles', 'bounty', 'profile'])
+const openKeys = ref(['articles', 'bounty', 'forum', 'orders', 'profile'])
 
 // 用户信息（模拟数据）
 const userInfo = ref({
@@ -212,6 +212,24 @@ const breadcrumbs = computed(() => {
       crumbs.push({ title: '创建', path: null })
     } else if (path === 'edit') {
       crumbs.push({ title: '编辑', path: null })
+    } else if (path === 'draft') {
+      crumbs.push({ title: '草稿', path: null })
+    } else if (path === 'my-posts') {
+      crumbs.push({ title: '我的帖子', path: null })
+    } else if (path === 'my-likes') {
+      crumbs.push({ title: '我的点赞', path: null })
+    } else if (path === 'transactions') {
+      crumbs.push({ title: '交易记录', path: null })
+    } else if (path === 'security') {
+      crumbs.push({ title: '账号安全', path: null })
+    } else if (path === 'role-apply') {
+      crumbs.push({ title: '角色申请', path: null })
+    } else if (path === 'subscriptions') {
+      crumbs.push({ title: '我的订阅', path: null })
+    } else if (path === 'privacy') {
+      crumbs.push({ title: '隐私设置', path: null })
+    } else if (path === 'audit-result') {
+      crumbs.push({ title: '审核结果', path: null })
     }
   })
   
@@ -275,18 +293,45 @@ watch(() => route.path, (newPath) => {
           selectedKeys.value = ['article-draft']
         }
       } else if (module === 'forum') {
-        selectedKeys.value = ['forum']
+        if (pathSegments[3] === 'create') {
+          selectedKeys.value = ['forum-create']
+        } else if (pathSegments[3] === 'my-posts') {
+          selectedKeys.value = ['forum-my-posts']
+        } else if (pathSegments[3] === 'my-likes') {
+          selectedKeys.value = ['forum-my-likes']
+        } else {
+          selectedKeys.value = ['forum-home']
+        }
       } else if (module === 'services') {
         selectedKeys.value = ['services']
       } else if (module === 'bounty') {
-        selectedKeys.value = ['bounty-list']
         if (pathSegments[3] === 'create') {
           selectedKeys.value = ['bounty-create']
+        } else if (pathSegments[3] === 'draft') {
+          selectedKeys.value = ['bounty-draft']
+        } else if (pathSegments[3] === 'audit-result') {
+          selectedKeys.value = ['bounty-list']
+        } else {
+          selectedKeys.value = ['bounty-list']
         }
       } else if (module === 'orders') {
-        selectedKeys.value = ['orders']
+        if (pathSegments[3] === 'transactions') {
+          selectedKeys.value = ['order-transactions']
+        } else {
+          selectedKeys.value = ['order-list']
+        }
       } else if (module === 'profile') {
-        selectedKeys.value = ['profile-info']
+        if (pathSegments[3] === 'security') {
+          selectedKeys.value = ['profile-security']
+        } else if (pathSegments[3] === 'role-apply') {
+          selectedKeys.value = ['profile-role-apply']
+        } else if (pathSegments[3] === 'subscriptions') {
+          selectedKeys.value = ['profile-subscriptions']
+        } else if (pathSegments[3] === 'privacy') {
+          selectedKeys.value = ['profile-privacy']
+        } else {
+          selectedKeys.value = ['profile-info']
+        }
       } else if (module === 'favorites') {
         selectedKeys.value = ['profile-favorites']
       } else if (module === 'following') {

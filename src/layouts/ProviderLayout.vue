@@ -170,6 +170,10 @@ const breadcrumbs = computed(() => {
       crumbs.push({ title: '交易记录', path: currentPath })
     } else if (path === 'create') {
       crumbs.push({ title: '创建', path: null })
+    } else if (path === 'audit-result') {
+      crumbs.push({ title: '审核结果', path: null })
+    } else if (path === 'delivery') {
+      crumbs.push({ title: '订单交付', path: null })
     }
   })
   
@@ -221,9 +225,14 @@ watch(() => route.path, (newPath) => {
         selectedKeys.value = ['service-list']
         if (pathSegments[3] === 'create') {
           selectedKeys.value = ['service-create']
+        } else if (pathSegments[3] === 'audit-result') {
+          selectedKeys.value = ['service-list']
         }
       } else if (module === 'orders') {
         selectedKeys.value = ['orders']
+        if (pathSegments[3] === 'delivery') {
+          selectedKeys.value = ['orders']
+        }
       } else if (module === 'transactions') {
         selectedKeys.value = ['transactions']
       }

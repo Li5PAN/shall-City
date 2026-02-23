@@ -33,7 +33,29 @@ export const userMenus = [
     key: 'forum',
     label: '技术论坛',
     icon: 'MessageOutlined',
-    path: '/user/forum'
+    path: '/user/forum',
+    children: [
+      {
+        key: 'forum-home',
+        label: '论坛首页',
+        path: '/user/forum'
+      },
+      {
+        key: 'forum-create',
+        label: '发布帖子',
+        path: '/user/forum/create'
+      },
+      {
+        key: 'forum-my-posts',
+        label: '我的帖子',
+        path: '/user/forum/my-posts'
+      },
+      {
+        key: 'forum-my-likes',
+        label: '我的点赞',
+        path: '/user/forum/my-likes'
+      }
+    ]
   },
   {
     key: 'services',
@@ -56,6 +78,11 @@ export const userMenus = [
         key: 'bounty-create',
         label: '发布悬赏',
         path: '/user/bounty/create'
+      },
+      {
+        key: 'bounty-draft',
+        label: '需求草稿',
+        path: '/user/bounty/draft'
       }
     ]
   },
@@ -63,7 +90,19 @@ export const userMenus = [
     key: 'orders',
     label: '我的订单',
     icon: 'ShoppingCartOutlined',
-    path: '/user/orders'
+    path: '/user/orders',
+    children: [
+      {
+        key: 'order-list',
+        label: '订单列表',
+        path: '/user/orders'
+      },
+      {
+        key: 'order-transactions',
+        label: '交易记录',
+        path: '/user/orders/transactions'
+      }
+    ]
   },
   {
     key: 'profile',
@@ -75,6 +114,16 @@ export const userMenus = [
         key: 'profile-info',
         label: '个人信息',
         path: '/user/profile'
+      },
+      {
+        key: 'profile-security',
+        label: '账号安全',
+        path: '/user/profile/security'
+      },
+      {
+        key: 'profile-role-apply',
+        label: '角色申请',
+        path: '/user/profile/role-apply'
       },
       {
         key: 'profile-favorites',
@@ -95,6 +144,16 @@ export const userMenus = [
         key: 'profile-messages',
         label: '消息中心',
         path: '/user/messages'
+      },
+      {
+        key: 'profile-subscriptions',
+        label: '我的订阅',
+        path: '/user/profile/subscriptions'
+      },
+      {
+        key: 'profile-privacy',
+        label: '隐私设置',
+        path: '/user/profile/privacy'
       },
       {
         key: 'profile-settings',
@@ -186,9 +245,19 @@ export const adminMenus = [
         path: '/admin/services/review'
       },
       {
+        key: 'bounty-review',
+        label: '需求审核',
+        path: '/admin/bounty/review'
+      },
+      {
         key: 'forum-manage',
         label: '论坛管理',
         path: '/admin/forum/manage'
+      },
+      {
+        key: 'forum-sections',
+        label: '板块管理',
+        path: '/admin/forum/sections'
       }
     ]
   },
@@ -207,6 +276,11 @@ export const adminMenus = [
         key: 'appeal-handle',
         label: '申诉处理',
         path: '/admin/appeals'
+      },
+      {
+        key: 'order-arbitration',
+        label: '订单仲裁',
+        path: '/admin/orders/arbitration'
       }
     ]
   },

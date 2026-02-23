@@ -42,7 +42,7 @@
 
     <!-- 图表区域 -->
     <a-row :gutter="[24, 24]" class="charts-section">
-      <!-- 用户增长趋势 -->
+      <!-- 用户增长趋势（折线图） -->
       <a-col :span="12">
         <a-card title="用户增长趋势" :bordered="false">
           <template #extra>
@@ -55,10 +55,26 @@
         </a-card>
       </a-col>
       
-      <!-- 交易金额趋势 -->
+      <!-- 订单量统计（柱状图） -->
       <a-col :span="12">
-        <a-card title="交易金额趋势" :bordered="false">
+        <a-card title="订单量统计" :bordered="false">
+          <div ref="orderVolumeChartRef" style="height: 300px;"></div>
+        </a-card>
+      </a-col>
+    </a-row>
+
+    <a-row :gutter="[24, 24]" class="charts-section">
+      <!-- 交易额统计（面积图） -->
+      <a-col :span="12">
+        <a-card title="交易额统计" :bordered="false">
           <div ref="transactionChartRef" style="height: 300px;"></div>
+        </a-card>
+      </a-col>
+
+      <!-- 服务分类分布（饼图） -->
+      <a-col :span="12">
+        <a-card title="服务分类分布" :bordered="false">
+          <div ref="serviceCategoryChartRef" style="height: 300px;"></div>
         </a-card>
       </a-col>
     </a-row>
@@ -71,19 +87,15 @@
         </a-card>
       </a-col>
       
-      <!-- 服务分类统计 -->
-      <a-col :span="8">
-        <a-card title="服务分类统计" :bordered="false">
-          <div ref="serviceCategoryChartRef" style="height: 300px;"></div>
-        </a-card>
-      </a-col>
-      
       <!-- 地域分布 -->
       <a-col :span="8">
         <a-card title="用户地域分布" :bordered="false">
           <div ref="locationChartRef" style="height: 300px;"></div>
         </a-card>
       </a-col>
+
+      <!-- 空位占位 -->
+      <a-col :span="8"></a-col>
     </a-row>
 
     <!-- 平台活跃度热力图 -->
@@ -193,6 +205,7 @@ import { ref, onMounted, nextTick, onUnmounted } from 'vue'
 import * as echarts from 'echarts'
 import dayjs from 'dayjs'
 import { message } from 'ant-design-vue'
+import { useAdminStore } from '@/stores/admin'
 import {
   UserOutlined,
   ShoppingCartOutlined,
@@ -202,8 +215,11 @@ import {
   ArrowDownOutlined
 } from '@ant-design/icons-vue'
 
+const adminStore = useAdminStore()
+
 // 图表引用
 const userGrowthChartRef = ref(null)
+const orderVolumeChartRef = ref(null)
 const transactionChartRef = ref(null)
 const userTypeChartRef = ref(null)
 const serviceCategoryChartRef = ref(null)
@@ -212,6 +228,7 @@ const heatmapChartRef = ref(null)
 
 // 图表实例
 let userGrowthChart = null
+let orderVolumeChart = null
 let transactionChart = null
 let userTypeChart = null
 let serviceCategoryChart = null
@@ -472,7 +489,7 @@ const initUserGrowthChart = () => {
   userGrowthChart.setOption(option)
 }
 
-// 初始化交易金额图表
+// 初始化交易金额图表（面积图）
 const initTransactionChart = () => {
   if (!transactionChartRef.value) return
   
@@ -503,7 +520,7 @@ const initTransactionChart = () => {
           color: '#1890ff'
         },
         areaStyle: {
-          color: 'rgba(24, 144, 255, 0.1)'
+          color: 'rgba(24, 144, 255, 0.2)'
         }
       },
       {
@@ -513,12 +530,48 @@ const initTransactionChart = () => {
         smooth: true,
         itemStyle: {
           color: '#52c41a'
+        },
+        areaStyle: {
+          color: 'rgba(82, 196, 26, 0.2)'
         }
       }
     ]
   }
   
   transactionChart.setOption(option)
+}
+
+// 初始化订单量统计图表（柱状图）
+const initOrderVolumeChart = () => {
+  if (!orderVolumeChartRef.value) return
+
+  orderVolumeChart = echarts.init(orderVolumeChartRef.value)
+
+  const option = {
+    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+    legend: { data: ['新增订单', '完成订单'] },
+    xAxis: {
+      type: 'category',
+      data: ['01-09', '01-10', '01-11', '01-12', '01-13', '01-14', '01-15']
+    },
+    yAxis: { type: 'value', name: '订单数' },
+    series: [
+      {
+        name: '新增订单',
+        type: 'bar',
+        data: [35, 42, 38, 55, 48, 62, 58],
+        itemStyle: { color: '#1890ff' }
+      },
+      {
+        name: '完成订单',
+        type: 'bar',
+        data: [28, 35, 30, 45, 40, 50, 48],
+        itemStyle: { color: '#52c41a' }
+      }
+    ]
+  }
+
+  orderVolumeChart.setOption(option)
 }
 
 // 初始化用户类型分布图
@@ -554,7 +607,7 @@ const initUserTypeChart = () => {
   userTypeChart.setOption(option)
 }
 
-// 初始化服务分类统计图
+// 初始化服务分类统计图（饼图）
 const initServiceCategoryChart = () => {
   if (!serviceCategoryChartRef.value) return
   
@@ -562,33 +615,36 @@ const initServiceCategoryChart = () => {
   
   const option = {
     tooltip: {
-      trigger: 'axis',
-      axisPointer: {
-        type: 'shadow'
-      }
+      trigger: 'item',
+      formatter: '{b}: {c} ({d}%)'
     },
-    xAxis: {
-      type: 'category',
-      data: ['网站开发', 'UI设计', '移动应用', '数据分析', '系统集成'],
-      axisLabel: {
-        rotate: 45
-      }
-    },
-    yAxis: {
-      type: 'value',
-      name: '服务数量'
+    legend: {
+      orient: 'vertical',
+      right: 10,
+      top: 'center'
     },
     series: [
       {
-        type: 'bar',
+        type: 'pie',
+        radius: ['35%', '65%'],
+        center: ['40%', '50%'],
         data: [
-          { value: 350, itemStyle: { color: '#1890ff' } },
-          { value: 280, itemStyle: { color: '#52c41a' } },
-          { value: 220, itemStyle: { color: '#722ed1' } },
-          { value: 180, itemStyle: { color: '#fa8c16' } },
-          { value: 150, itemStyle: { color: '#eb2f96' } }
+          { value: 350, name: '网站开发', itemStyle: { color: '#1890ff' } },
+          { value: 280, name: 'UI设计', itemStyle: { color: '#52c41a' } },
+          { value: 220, name: '移动应用', itemStyle: { color: '#722ed1' } },
+          { value: 180, name: '数据分析', itemStyle: { color: '#fa8c16' } },
+          { value: 150, name: '系统集成', itemStyle: { color: '#eb2f96' } }
         ],
-        barWidth: '60%'
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.5)'
+          }
+        },
+        label: {
+          formatter: '{b}: {d}%'
+        }
       }
     ]
   }
@@ -712,6 +768,7 @@ const updateHeatmapChart = () => {
 // 窗口大小变化时重新调整图表
 const handleResize = () => {
   userGrowthChart?.resize()
+  orderVolumeChart?.resize()
   transactionChart?.resize()
   userTypeChart?.resize()
   serviceCategoryChart?.resize()
@@ -720,10 +777,14 @@ const handleResize = () => {
 }
 
 onMounted(async () => {
+  // 从 adminStore 获取统计数据
+  await adminStore.fetchStatistics()
+
   await nextTick()
   
   // 初始化所有图表
   initUserGrowthChart()
+  initOrderVolumeChart()
   initTransactionChart()
   initUserTypeChart()
   initServiceCategoryChart()
@@ -745,6 +806,7 @@ onUnmounted(() => {
   
   // 销毁图表实例
   userGrowthChart?.dispose()
+  orderVolumeChart?.dispose()
   transactionChart?.dispose()
   userTypeChart?.dispose()
   serviceCategoryChart?.dispose()

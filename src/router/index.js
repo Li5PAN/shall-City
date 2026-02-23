@@ -17,12 +17,12 @@ Object.keys(files).forEach((key) => {
 // 存放动态路由（从modules加载的路由）
 const asyncRouterList = [...routerModuleList];
 
-// 存放固定路由（登录、注册等无需鉴权的路由）
+// 存放固定路由
 const defaultRouterList = [
-  // 根路径重定向到登录页面
+  // 根路径重定向到首页
   {
     path: "/",
-    redirect: "/login",
+    redirect: "/home",
   },
   // 404路由（放在最后）
   {
@@ -49,63 +49,45 @@ const router = createRouter({
   },
 });
 
+// 根据角色获取对应首页路径
+function getHomeRoute(role) {
+  switch (role) {
+    case 'admin':
+      return '/admin/dashboard'
+    case 'provider':
+      return '/provider/dashboard'
+    default:
+      return '/home'
+  }
+}
+
 // 路由守卫
 router.beforeEach((to, from, next) => {
-  // 设置页面标题
+  // 1. 设置页面标题
   document.title = to.meta.title ? `${to.meta.title} - IT服务平台` : 'IT服务平台'
   
-  // 检查是否需要认证
+  // 2. 获取认证状态
   const token = localStorage.getItem('token')
   const isAuthenticated = !!token
+  const userInfo = isAuthenticated ? JSON.parse(localStorage.getItem('userInfo') || '{}') : {}
+  const userRole = userInfo.role || 'user'
   
-  // 如果用户已登录且访问根路径，重定向到对应的首页
-  if (to.path === '/login' && isAuthenticated) {
-    const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}')
-    const userRole = userInfo.role
-    
-    switch (userRole) {
-      case 'admin':
-        next('/admin/statistics')
-        return
-      case 'provider':
-        next('/provider/dashboard')
-        return
-      default:
-        next('/user/news')
-        return
-    }
-  }
-  
-  if (to.meta.requiresAuth && !isAuthenticated) {
-    next('/login')
+  // 3. 已登录用户访问guest页面 → 重定向到对应首页
+  if (to.meta.guest && isAuthenticated) {
+    next(getHomeRoute(userRole))
     return
   }
   
-  // 检查访客页面（已登录用户不能访问）
-  if (to.meta.guest && isAuthenticated) {
-    const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}')
-    const userRole = userInfo.role
-    
-    switch (userRole) {
-      case 'admin':
-        next('/admin/statistics')
-        return
-      case 'provider':
-        next('/provider/dashboard')
-        return
-      default:
-        next('/user/news')
-        return
-    }
+  // 4. 需要认证但未登录 → 重定向到登录页（携带redirect参数）
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    next({ path: '/login', query: { redirect: to.fullPath } })
+    return
   }
   
-  // 检查角色权限
+  // 5. 角色权限检查 → 无权限重定向到403
   if (to.meta.role && isAuthenticated) {
-    const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}')
-    const userRole = userInfo.role
     const requiredRoles = Array.isArray(to.meta.role) ? to.meta.role : [to.meta.role]
-    
-    if (userRole && !requiredRoles.includes(userRole)) {
+    if (!requiredRoles.includes(userRole)) {
       next('/403')
       return
     }

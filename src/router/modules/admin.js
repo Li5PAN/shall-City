@@ -48,10 +48,22 @@ export default {
       meta: { title: '服务审核' }
     },
     {
+      path: 'bounty/review',
+      name: 'BountyReview',
+      component: () => import('@/pages/admin/content/BountyReview.vue'),
+      meta: { title: '需求审核' }
+    },
+    {
       path: 'forum/manage',
       name: 'ForumManage',
       component: () => import('@/pages/admin/content/ForumManage.vue'),
       meta: { title: '论坛管理' }
+    },
+    {
+      path: 'forum/sections',
+      name: 'ForumSectionManage',
+      component: () => import('@/pages/admin/content/ForumSectionManage.vue'),
+      meta: { title: '板块管理' }
     },
     
     // 订单管理
@@ -66,6 +78,12 @@ export default {
       name: 'AdminAppeals',
       component: () => import('@/pages/admin/orders/AppealHandle.vue'),
       meta: { title: '申诉处理' }
+    },
+    {
+      path: 'orders/arbitration/:id',
+      name: 'OrderArbitration',
+      component: () => import('@/pages/admin/orders/OrderArbitration.vue'),
+      meta: { title: '订单仲裁' }
     },
     
     // 系统管理

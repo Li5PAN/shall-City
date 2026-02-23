@@ -26,5 +26,13 @@ export default [
       title: '注册',
       guest: true 
     }
+  },
+  {
+    path: '/403',
+    name: 'Forbidden',
+    component: () => import('@/pages/error/403.vue'),
+    meta: { 
+      title: '权限不足' 
+    }
   }
 ]
