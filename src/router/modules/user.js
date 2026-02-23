@@ -1,13 +1,21 @@
-// 普通用户路由模块
+// 普通用户路由模块 — 所有子页面挂在 Home.vue 下，共享首页侧边栏
 export default {
-  path: '/user',
-  component: () => import('@/layouts/UserLayout.vue'),
-  meta: { 
-    requiresAuth: true, 
-    role: ['user', 'provider'] 
+  path: '/home',
+  component: () => import('@/pages/Home.vue'),
+  meta: {
+    requiresAuth: true,
+    title: 'IT服务平台首页'
   },
   children: [
-    // 资讯大厅
+    // 首页默认内容
+    {
+      path: '',
+      name: 'Home',
+      component: () => import('@/pages/HomeContent.vue'),
+      meta: { title: 'IT服务平台首页' }
+    },
+
+    // 资讯
     {
       path: 'news',
       name: 'UserNews',
@@ -47,7 +55,7 @@ export default {
       meta: { title: '草稿箱' }
     },
 
-    // 论坛模块
+    // 论坛
     {
       path: 'forum',
       name: 'Forum',
@@ -85,7 +93,7 @@ export default {
       meta: { title: '帖子详情' }
     },
 
-    // 服务相关
+    // 服务
     {
       path: 'services',
       name: 'UserServices',
@@ -105,7 +113,7 @@ export default {
       meta: { title: '服务详情' }
     },
 
-    // 需求悬赏
+    // 悬赏
     {
       path: 'bounty',
       name: 'BountyList',
@@ -137,7 +145,7 @@ export default {
       meta: { title: '悬赏详情' }
     },
 
-    // 订单管理
+    // 订单
     {
       path: 'orders',
       name: 'UserOrders',

@@ -198,8 +198,6 @@ const handleLogin = async (values) => {
     
     if (userRole === 'admin') {
       router.push('/admin/statistics')
-    } else if (userRole === 'provider') {
-      router.push('/provider/dashboard')
     } else {
       router.push('/home')
     }

@@ -24,6 +24,14 @@ const defaultRouterList = [
     path: "/",
     redirect: "/home",
   },
+  // 兼容旧的 /user/* 路径，重定向到 /home/*
+  {
+    path: "/user/:pathMatch(.*)*",
+    redirect: to => {
+      const rest = Array.isArray(to.params.pathMatch) ? to.params.pathMatch.join('/') : (to.params.pathMatch || '')
+      return `/home/${rest}`
+    },
+  },
   // 404路由（放在最后）
   {
     path: "/:pathMatch(.*)*",
@@ -54,8 +62,6 @@ function getHomeRoute(role) {
   switch (role) {
     case 'admin':
       return '/admin/dashboard'
-    case 'provider':
-      return '/provider/dashboard'
     default:
       return '/home'
   }
