@@ -135,6 +135,7 @@
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
+import { useAuthStore } from '@/stores/auth'
 import {
   UserOutlined,
   LockOutlined,
@@ -146,6 +147,7 @@ import {
 } from '@ant-design/icons-vue'
 
 const router = useRouter()
+const authStore = useAuthStore()
 
 // 表单数据
 const formData = reactive({
@@ -189,41 +191,18 @@ const handleLogin = async (values) => {
   loading.value = true
   
   try {
-    // 模拟登录API调用
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await new Promise(resolve => setTimeout(resolve, 500))
     
-    // 根据用户名判断角色
-    let userRole = 'user'
-    if (values.username === 'admin') {
-      userRole = 'admin'
-    } else if (values.username === 'provider') {
-      userRole = 'provider'
-    }
+    const res = await authStore.login({ username: values.username, password: values.password })
+    const userRole = res.userInfo.role
     
-    // 模拟登录成功
-    const mockUser = {
-      id: 1001,
-      username: values.username,
-      email: 'user@example.com',
-      role: userRole,
-      avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'
-    }
-    
-    // 保存用户信息和token
-    localStorage.setItem('token', 'mock-jwt-token')
-    localStorage.setItem('userInfo', JSON.stringify(mockUser))
-    
-    message.success('登录成功')
-    
-    // 根据用户角色跳转
-    if (mockUser.role === 'admin') {
+    if (userRole === 'admin') {
       router.push('/admin/statistics')
-    } else if (mockUser.role === 'provider') {
+    } else if (userRole === 'provider') {
       router.push('/provider/dashboard')
     } else {
-      router.push('/user/news')
+      router.push('/home')
     }
-    
   } catch (error) {
     message.error('登录失败，请检查用户名和密码')
   } finally {

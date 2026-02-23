@@ -443,14 +443,15 @@ import {
   OrderedListOutlined,
   UploadOutlined
 } from '@ant-design/icons-vue'
-import { 
-  createBounty, 
-  updateBounty, 
-  getBountyCategories, 
-  getPopularSkills,
-  uploadAttachment,
-  saveBountyDraft
-} from '@/api/bounty'
+import { message } from 'ant-design-vue'
+
+// 模拟API函数（已移除接口依赖）
+const createBounty = async (data) => { return { id: Date.now(), ...data } }
+const updateBounty = async (id, data) => { return { id, ...data } }
+const getBountyCategories = async () => ['全栈开发', 'UI设计', 'Python', 'Web开发', '数据可视化', 'AI服务', '移动开发']
+const getPopularSkills = async () => ['Vue', 'React', 'Python', 'Java', 'Go', 'Docker', 'K8s', 'MySQL']
+const uploadAttachment = async (file) => ({ url: URL.createObjectURL(file), name: file.name })
+const saveBountyDraft = async (data) => { message.success('草稿保存成功'); return { id: Date.now(), ...data } }
 
 const router = useRouter()
 const route = useRoute()

@@ -1,6 +1,12 @@
 import { defineStore } from 'pinia'
 import { message } from 'ant-design-vue'
-import request from '@/utils/request'
+
+// 模拟用户数据
+const mockUsers = {
+  admin: { id: 1, username: 'admin', nickname: '管理员', role: 'admin', avatar: '', email: 'admin@example.com' },
+  provider: { id: 2, username: 'provider', nickname: '服务商小王', role: 'provider', avatar: '', email: 'provider@example.com' },
+  user: { id: 3, username: 'user', nickname: 'chant_96', role: 'user', avatar: '', email: 'user@example.com' },
+}
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -16,17 +22,17 @@ export const useAuthStore = defineStore('auth', {
 
   actions: {
     async login(credentials) {
-      try {
-        const res = await request.post('/auth/login', credentials)
-        this.token = res.token
-        this.userInfo = res.userInfo
-        localStorage.setItem('token', res.token)
-        localStorage.setItem('userInfo', JSON.stringify(res.userInfo))
-        return res
-      } catch (e) {
-        message.error(e.message || '登录失败')
-        throw e
-      }
+      // 模拟登录：根据用户名匹配角色，密码任意
+      const username = credentials.username || credentials.account || ''
+      const mockUser = mockUsers[username] || mockUsers.user
+      const token = 'mock-token-' + Date.now()
+
+      this.token = token
+      this.userInfo = { ...mockUser, username: username || 'user' }
+      localStorage.setItem('token', token)
+      localStorage.setItem('userInfo', JSON.stringify(this.userInfo))
+      message.success('登录成功')
+      return { token, userInfo: this.userInfo }
     },
 
     logout() {
@@ -37,13 +43,9 @@ export const useAuthStore = defineStore('auth', {
     },
 
     async refreshUserInfo() {
-      try {
-        const res = await request.get('/auth/user-info')
-        this.userInfo = res
-        localStorage.setItem('userInfo', JSON.stringify(res))
-      } catch (e) {
-        message.error(e.message || '获取用户信息失败')
-        throw e
+      // 模拟刷新用户信息
+      if (this.userInfo) {
+        message.success('用户信息已刷新')
       }
     },
 

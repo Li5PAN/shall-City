@@ -77,7 +77,14 @@
 import { ref, reactive, onMounted } from 'vue'
 import { message } from 'ant-design-vue'
 import { PlusOutlined } from '@ant-design/icons-vue'
-import { getRoleList, updateRolePermissions } from '@/api/admin'
+
+// 模拟API函数（已移除接口依赖）
+const getRoleList = async () => [
+  { id: 1, name: 'admin', label: '管理员', permissions: ['all'] },
+  { id: 2, name: 'provider', label: '服务商', permissions: ['service:manage', 'order:manage'] },
+  { id: 3, name: 'user', label: '普通用户', permissions: ['order:create', 'bounty:create'] },
+]
+const updateRolePermissions = async (id, permissions) => { return { id, permissions } }
 
 const loading = ref(false)
 const roleModalVisible = ref(false)
